@@ -1,8 +1,5 @@
 import re
 
-# -----------------------------
-# Domain detection
-# -----------------------------
 def detect_domain(scenario_context: str) -> str:
     s = scenario_context.lower()
     if "set of blocks" in s or "pick up a block" in s:
@@ -11,9 +8,6 @@ def detect_domain(scenario_context: str) -> str:
         return "craves"
     return "generic"
 
-# -----------------------------
-# Prompt building
-# -----------------------------
 def keep_only_last_statement(scenario_context: str) -> str:
     parts = scenario_context.split("[STATEMENT]")
     header = parts[0]
@@ -119,15 +113,11 @@ def build_prompt(scenario_context: str) -> tuple[str, str]:
             prompt = parts[0] + "[STATEMENT]" + parts[1] + "[STATEMENT]" + parts[2]
 
     elif domain == "blocks":
-        # Keep blocks logic working as it did
         prompt = keep_only_last_statement(scenario_context)
         prompt = inject_thought_marker(prompt)
 
     return prompt, domain
 
-# -----------------------------
-# Domain-specific system prompts
-# -----------------------------
 def get_system_prompt(domain: str) -> str:
     if domain == "craves":
         return (
@@ -164,9 +154,6 @@ def get_system_prompt(domain: str) -> str:
         "Output one action per line and end with [PLAN END]."
     )
 
-# -----------------------------
-# Output parser (domain-aware)
-# -----------------------------
 def parse_to_lisp(plan_text: str, domain: str):
     actions = []
     if "[PLAN]" in plan_text:
@@ -362,25 +349,16 @@ def canonicalize_blocks_stateful(actions: list[str], last_stmt: str, max_inserti
 
     return out
 
-# ==============================================================================
-# STUDENT AGENT CLASS
-# ==============================================================================
 class AssemblyAgent:
     def __init__(self):
-        # La clase ya no necesita guardar el system_prompt genérico
-        # porque usamos get_system_prompt() dinámicamente.
         pass
         
     def solve(self, scenario_context: str, llm_engine_func) -> list:
-        """
-        Recibe el texto del escenario y la funcion del motor LLM.
-        Debe retornar una lista de strings con las acciones extraidas en formato LISP.
-        """
-        # 1. Construir el prompt y detectar el dominio
+        # prompt y detección de dominio
         prompt, domain = build_prompt(scenario_context)
         system_prompt = get_system_prompt(domain)
         
-        # 2. Llamada al LLM usando el motor oficial
+        # LLM con el motor
         output_text = llm_engine_func(
             prompt=prompt,
             system=system_prompt,
@@ -390,17 +368,14 @@ class AssemblyAgent:
             do_sample=False
         )
         
-        # 3. Extraer solo el bloque PLAN
         plan_text = output_text
         if "[PLAN]" in output_text:
             plan_text = output_text.rsplit("[PLAN]", 1)[-1]
             if "[PLAN END]" in plan_text:
                 plan_text = plan_text.split("[PLAN END]")[0]
                 
-        # 4. Parsear con las reglas específicas de dominio
         predicted = parse_to_lisp(plan_text, domain)
         
-        # 5. Aplicar canonicalización (tu lógica experta de state machine) si es blocks
         if domain == "blocks":
             predicted = canonicalize_blocks(predicted)
             last_stmt = keep_only_last_statement(scenario_context)
