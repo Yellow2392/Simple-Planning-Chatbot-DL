@@ -131,15 +131,15 @@ def build_prompt(scenario_context: str) -> tuple[str, str]:
 def get_system_prompt(domain: str) -> str:
     if domain == "craves":
         return (
-            "You are an expert logical planning AI. Solve ONLY the final [STATEMENT].\n"
-            "The user prompt ends with '[THOUGHT]'. In max 3 sentences, explicitly map the EXACT letters for each goal.\n"
+            "You are an expert logical planning AI. Solve ONLY the final [STATEMENT] in the user message.\n"
+            "The user prompt ends with '[THOUGHT]'. In max 3 sentences, map the goals to the necessary actions.\n"
             "Then write exactly '[THOUGHT END]' on its own line, then '[PLAN]'.\n\n"
-            "CRITICAL RULES:\n"
-            "1. EXACT LETTERS: A goal of 'X craves Y' MUST end with '(overcome X Y)'. Double-check the letters before writing the plan.\n"
-            "2. PLANET RULE: To get Pain for X, use '(attack X)' ONLY IF X is inside the 'planet' list from the initial facts. If NOT, use '(feast X Z)'.\n"
-            "3. THE ATTACK COMBO: If you perform '(attack X)', the very next action MUST be '(overcome X Y)'. NEVER put '(succumb)' in between.\n"
-            "4. THE FEAST COMBO: If you perform '(feast X Z)' just to shift a province, follow it immediately with '(succumb X)' to restore harmony.\n"
-            "Write exactly one action per line. End with '[PLAN END]'."
+            "CRITICAL HEURISTICS FOR THIS DOMAIN:\n"
+            "1. THE 'OVERCOME' TARGET: To achieve a goal of 'X craves Y', the final step for that target is ALWAYS '(overcome X Y)'. This requires X to have 'Pain' and Y to have 'Province'.\n"
+            "2. THE PAIN SOURCE: To give X 'Pain', you must perform '(attack X)' or '(feast X Z)'.\n"
+            "3. THE SUCCUMB TRAP (CRITICAL): NEVER perform '(succumb X)' immediately before '(overcome X Y)'. Succumb destroys the 'Pain' you need for Overcome! \n"
+            "4. WHEN TO SUCCUMB: Only use '(succumb X)' AFTER an overcome, or if you desperately need to restore 'Harmony' to perform a completely DIFFERENT '(attack)' or '(feast)' on a new object.\n"
+            "Write exactly one action per line in natural language. End with '[PLAN END]' on its own line."
         )
 
     if domain == "blocks":
