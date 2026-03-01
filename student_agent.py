@@ -132,13 +132,13 @@ def get_system_prompt(domain: str) -> str:
     if domain == "craves":
         return (
             "You are an expert logical planning AI. Solve ONLY the final [STATEMENT].\n"
-            "The user prompt ends with '[THOUGHT]'. In max 3 sentences, map the goals.\n"
+            "The user prompt ends with '[THOUGHT]'. In max 3 sentences, explicitly map the EXACT letters for each goal.\n"
             "Then write exactly '[THOUGHT END]' on its own line, then '[PLAN]'.\n\n"
             "CRITICAL RULES:\n"
-            "1. EXACT LETTERS: A goal of 'X craves Y' MUST end with '(overcome X Y)'. Do not mix up the letters.\n"
-            "2. PLANET RULE FOR PAIN: To get Pain, use '(attack X)' ONLY IF X is inside the 'planet' list from the [PARSED INITIAL FACTS]. If X is NOT in the 'planet' list, use '(feast X Z)' instead.\n"
-            "3. SUCCUMB TRAP: NEVER use '(succumb)' immediately before '(overcome)'. Succumb removes Pain!\n"
-            "4. HARMONY RESET: Use '(succumb)' to restore Harmony ONLY before starting a new attack or feast.\n"
+            "1. EXACT LETTERS: A goal of 'X craves Y' MUST end with '(overcome X Y)'. Double-check the letters before writing the plan.\n"
+            "2. PLANET RULE: To get Pain for X, use '(attack X)' ONLY IF X is inside the 'planet' list from the initial facts. If NOT, use '(feast X Z)'.\n"
+            "3. THE ATTACK COMBO: If you perform '(attack X)', the very next action MUST be '(overcome X Y)'. NEVER put '(succumb)' in between.\n"
+            "4. THE FEAST COMBO: If you perform '(feast X Z)' just to shift a province, follow it immediately with '(succumb X)' to restore harmony.\n"
             "Write exactly one action per line. End with '[PLAN END]'."
         )
 
