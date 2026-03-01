@@ -135,10 +135,10 @@ def get_system_prompt(domain: str) -> str:
             "The user prompt ends with '[THOUGHT]'. In max 3 sentences, explicitly map the EXACT letters of the goal to the required actions (e.g., 'Goal is X craves Y -> must end with overcome X Y').\n"
             "Then write exactly '[THOUGHT END]' on its own line, then '[PLAN]'.\n\n"
             "CRITICAL HEURISTICS FOR THIS DOMAIN:\n"
-            "1. THE 'OVERCOME' TARGET: To achieve a goal of 'X craves Y', the final step for that target is ALWAYS '(overcome X Y)'. This requires X to have 'Pain' and Y to have 'Province'. Do not mix up the letters.\n"
-            "2. THE PAIN SOURCE: To give X 'Pain', you must perform '(attack X)' or '(feast X Z)'.\n"
+            "1. THE 'OVERCOME' TARGET: To achieve a goal of 'X craves Y', the final step for that target is ALWAYS '(overcome X Y)'. Do not mix up the letters.\n"
+            "2. THE PAIN SOURCE: To give X 'Pain', you must perform '(attack X)' or '(feast X Z)'. Use your [STEP0 HINTS] as a guide: if X is in 'attackable0', attack it. If not, use feast.\n"
             "3. THE SUCCUMB TRAP (CRITICAL): NEVER perform '(succumb X)' immediately before '(overcome X Y)'. Succumb destroys the 'Pain' you need for Overcome! \n"
-            "4. WHEN TO SUCCUMB: Only use '(succumb X)' AFTER an overcome, or if you desperately need to restore 'Harmony' to perform a completely DIFFERENT '(attack)' or '(feast)' on a new object.\n"
+            "4. WHEN TO SUCCUMB: Only use '(succumb X)' AFTER an overcome, or right after a '(feast)' to restore 'Harmony'.\n"
             "Write exactly one action per line in natural language. End with '[PLAN END]' on its own line."
         )
 
