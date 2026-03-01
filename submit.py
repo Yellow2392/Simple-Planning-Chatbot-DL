@@ -15,7 +15,6 @@ def main():
     
     for i, caso in enumerate(casos):
         task_id = caso['assembly_task_id']
-        context = caso['scenario_context']
         print(f"Procesando caso {i+1}/{len(casos)} (ID: {task_id})...")
         
         try:
@@ -23,7 +22,6 @@ def main():
             
             resultados_entrega.append({
                 "assembly_task_id": task_id,
-                "scenario_context": context,
                 "complexity_level": len(plan_generado),
                 "target_action_sequence": plan_generado
             })
